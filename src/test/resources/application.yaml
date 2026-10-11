@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:mindcare;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password:
+  ai:
+    openai:
+      api-key: test-key
+      base-url: http://localhost
+
+jwt:
+  secret: test-only-secret-with-at-least-thirty-two-characters
+  expiration: 86400000
+  refresh-expiration: 604800000
+  header: Authorization
+  token-prefix: "Bearer "

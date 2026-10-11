@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: ai-springboot
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/mental_health_assistant?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  ai:
+    openai:
+      chat:
+        options:
+          model: deepseek-ai/DeepSeek-V4-Flash
+          tool-calling:
+            enabled: true
+        completions-path: /v1/chat/completions
+      api-key: ${SILICONFLOW_API_KEY:demo-key-not-configured}
+      base-url: ${AI_BASE_URL:https://api.siliconflow.cn}
+
+  # JWT配置
+jwt:
+    secret: ${JWT_SECRET:local-development-secret-change-before-production-2026}
+    expiration: ${JWT_EXPIRATION:86400000}  # 24小时（毫秒）
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}  # 7天（毫秒）
+    header: Authorization  # token头部名称
+    token-prefix: "Bearer "  # token前缀
+
+server:
+  port: ${PORT:8080}

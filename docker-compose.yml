@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mental_health_assistant}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-mindcare-local-password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD:-mindcare-local-password}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: ${DB_URL:-jdbc:mysql://db:3306/mental_health_assistant?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+      DB_USERNAME: ${DB_USERNAME:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-mindcare-local-password}
+      JWT_SECRET: ${JWT_SECRET:-local-compose-secret-change-before-production-2026}
+      SILICONFLOW_API_KEY: ${SILICONFLOW_API_KEY:-demo-key-not-configured}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.siliconflow.cn}
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads:/app/uploads
+
+volumes:
+  mysql-data:
+  uploads:
