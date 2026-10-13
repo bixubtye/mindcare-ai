@@ -1,159 +1,56 @@
 <template>
-    <div class="auth-layout">
-        <div class="left-section">
-            <div class="content">
-                <h2 class="title">AI心理助手</h2>
-                <p class="text">每一个深夜，我们都在这里</p>
-                <div class="image">
-                    <img :src="iconurl" alt="AI心理助手">
-                </div>
-            </div>
+  <div class="auth-layout">
+    <aside class="brand-section">
+      <div class="brand-content">
+        <router-link class="brand-lockup" to="/" aria-label="返回校园节律首页">
+          <BrandMark tone="light" class="auth-mark" />
+          <span><strong>校园节律</strong><small>CampusRhythm</small></span>
+        </router-link>
+        <div class="brand-message">
+          <p class="brand-kicker">大学生压力与作息韧性平台</p>
+          <h1>每天一点记录，<br />慢慢找到自己的节奏</h1>
+          <div class="rhythm-decoration" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
         </div>
-        <div class="right-section">
-            <router-view></router-view>
-        </div>
-    </div>
+        <p class="brand-note">记录 · 梳理 · 调整</p>
+      </div>
+    </aside>
+    <section class="form-section"><router-view /></section>
+  </div>
 </template>
+
 <script setup>
-import iconurl from '@/assets/robot.png'
+import BrandMark from '@/components/BrandMark.vue'
 </script>
 
 <style scoped>
-.auth-layout {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-}
-
-/* 左侧品牌区：纯绿色背景 */
-.left-section {
-    position: relative;
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    background-color: #22c55e;
-    overflow: hidden;
-}
-
-/* 浅色装饰圆点，保持纯绿底色的同时增加层次感 */
-.left-section::before,
-.left-section::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.left-section::before {
-    width: 320px;
-    height: 320px;
-    top: -120px;
-    left: -120px;
-}
-
-.left-section::after {
-    width: 260px;
-    height: 260px;
-    bottom: -100px;
-    right: -80px;
-}
-
-.content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 70px 32px 60px;
-    box-sizing: border-box;
-}
-
-/* 标题居中靠上 */
-.title {
-    margin: 0;
-    font-size: 34px;
-    font-weight: 600;
-    letter-spacing: 4px;
-    color: #fff;
-}
-
-/* 小字副标题排列在标题下方 */
-.text {
-    margin: 14px 0 0;
-    font-size: 15px;
-    letter-spacing: 2px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* 图片居中显示，圆形边框 */
-.image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 180px;
-    height: 180px;
-    margin: auto 0;
-    border-radius: 50%;
-    border: 6px solid rgba(255, 255, 255, 0.9);
-    background-color: #fff;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-    overflow: hidden;
-    box-sizing: border-box;
-}
-
-.image img {
-    width: 72%;
-    height: 72%;
-    object-fit: contain;
-}
-
-/* 右侧表单区 */
-.right-section {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    background-color: #fff;
-    box-sizing: border-box;
-}
-
-/* 移动端上下堆叠 */
-@media (max-width: 768px) {
-    .auth-layout {
-        flex-direction: column;
-        overflow-y: auto;
-    }
-
-    .left-section {
-        flex: none;
-    }
-
-    .content {
-        padding: 36px 20px 30px;
-    }
-
-    .title {
-        font-size: 24px;
-        letter-spacing: 2px;
-    }
-
-    .text {
-        margin-top: 10px;
-        font-size: 13px;
-    }
-
-    .image {
-        width: 110px;
-        height: 110px;
-        margin: 24px 0 0;
-        border-width: 4px;
-    }
-
-    .right-section {
-        padding: 24px 20px;
-    }
+.auth-layout { display: grid; grid-template-columns: minmax(380px, .9fr) minmax(500px, 1.1fr); width: 100%; min-height: 100vh; background: #fff; }
+.brand-section { position: relative; overflow: hidden; background: var(--brand-primary-dark); color: #fff; }
+.brand-section::before, .brand-section::after { position: absolute; border: 1px solid rgba(255,255,255,.1); border-radius: 50%; content: ''; }
+.brand-section::before { top: -180px; right: -160px; width: 470px; height: 470px; }
+.brand-section::after { bottom: -230px; left: -190px; width: 540px; height: 540px; }
+.brand-content { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding: clamp(34px, 6vw, 70px); }
+.brand-lockup { display: inline-flex; align-items: center; gap: 14px; width: fit-content; color: #fff; text-decoration: none; }
+.auth-mark { width: 52px; height: 52px; border-radius: 15px; }
+.brand-lockup span { display: flex; flex-direction: column; }
+.brand-lockup strong { font-size: 23px; letter-spacing: .08em; }
+.brand-lockup small { margin-top: 5px; color: rgba(255,255,255,.7); font-size: 12px; letter-spacing: .1em; }
+.brand-message { margin: auto 0; }
+.brand-kicker { margin: 0 0 22px; color: #bcd8d1; font-size: 14px; font-weight: 700; letter-spacing: .08em; }
+.brand-message h1 { margin: 0; color: #fff; font-size: clamp(34px, 4vw, 54px); line-height: 1.35; letter-spacing: -.035em; }
+.rhythm-decoration { display: flex; align-items: center; gap: 9px; height: 72px; margin-top: 40px; }
+.rhythm-decoration i { width: 7px; border-radius: 99px; background: rgba(255,255,255,.72); }
+.rhythm-decoration i:nth-child(1), .rhythm-decoration i:nth-child(7) { height: 18px; opacity: .45; }
+.rhythm-decoration i:nth-child(2), .rhythm-decoration i:nth-child(6) { height: 36px; opacity: .58; }
+.rhythm-decoration i:nth-child(3), .rhythm-decoration i:nth-child(5) { height: 58px; opacity: .78; }
+.rhythm-decoration i:nth-child(4) { height: 72px; background: var(--brand-accent); }
+.brand-note { margin: 0; color: rgba(255,255,255,.62); font-size: 13px; letter-spacing: .22em; }
+.form-section { display: flex; align-items: center; justify-content: center; min-width: 0; padding: 40px clamp(28px, 7vw, 96px); background: #fbfcfb; }
+@media (max-width: 860px) {
+  .auth-layout { grid-template-columns: 1fr; }
+  .brand-content { min-height: auto; padding: 24px; }
+  .brand-message, .brand-note { display: none; }
+  .form-section { min-height: calc(100vh - 100px); padding: 34px 22px; }
 }
 </style>

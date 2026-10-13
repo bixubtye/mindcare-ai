@@ -1,6 +1,6 @@
 <template>
     <div class="knowledge-page">
-        <Pagehead title="知识管理">
+        <Pagehead title="工具内容管理">
             <template #buttons>
                 <el-button type="primary" @click="handleAdd">新增</el-button>
             </template>

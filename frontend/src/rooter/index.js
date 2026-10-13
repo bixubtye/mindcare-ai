@@ -13,7 +13,7 @@ const backendRoutes = [
         path:'dashboard',
         component:()=>import('@/views/Dashboard.vue'),
         meta:{
-          title:'数据分析',
+          title:'校园状态概览',
           icon:'PieChart'
         }
       }
@@ -22,7 +22,7 @@ const backendRoutes = [
         path:'knowledge',
         component:()=>import('@/views/Knowledge.vue'),
         meta:{
-          title:'知识管理',
+          title:'工具内容管理',
           icon:'Reading'
         }
       }
@@ -31,7 +31,7 @@ const backendRoutes = [
         path:'consultation',
         component:()=>import('@/views/Consultation.vue'),
         meta:{
-          title:'咨询记录',
+          title:'复盘记录',
           icon:'ChatRound'
         }
       }
@@ -40,7 +40,7 @@ const backendRoutes = [
         path:'emotional',
         component:()=>import('@/views/Emotional.vue'),
         meta:{
-          title:' 情绪日志',
+          title:'状态打卡记录',
           icon:'Sunrise'
         }
       }

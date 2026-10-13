@@ -21,11 +21,12 @@ const props = defineProps({
   align-items: center;
   padding-bottom: 16px;
   margin-bottom: 16px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
  .page-title {
   font-size: 24px;
-  color: #212529;
+  color: var(--text-primary);
   margin: 0;
+  font-weight: 700;
  }
 }
 </style>

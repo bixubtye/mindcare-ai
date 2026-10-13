@@ -9,9 +9,7 @@
         <div class="flex-box">
             <el-dropdown @command="handleCommand">
                 <div class="flex-box user-info">
-                    <el-avatar :size="32">
-                        <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"/>
-                    </el-avatar>
+                    <el-avatar :size="32" class="user-avatar"><el-icon><User /></el-icon></el-avatar>
                     <span class="user-name">用户</span>
                     <el-icon><ArrowDown /></el-icon>
                 </div>
@@ -25,7 +23,7 @@
     </div>
 </template>
 <script setup>
-import { Expand, ArrowDown } from '@element-plus/icons-vue'
+import { Expand, ArrowDown, User } from '@element-plus/icons-vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
@@ -64,10 +62,10 @@ height: 64px;
 display: flex;
 align-items: center;
 justify-content: space-between;
-padding: 0 15px;
+padding: 0 22px;
 background: white;
-box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-border-bottom: 1px solid #e5e7eb;
+box-shadow: 0 2px 14px rgba(32, 74, 68, 0.05);
+border-bottom: 1px solid var(--border-color);
 .flex-box {
     display: flex;
     align-items: center;
@@ -76,7 +74,7 @@ border-bottom: 1px solid #e5e7eb;
 .page-title {
     font-size: 18px;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--text-primary);
     margin: 0 0 0 12px;
     letter-spacing: 0.5px;
 }
@@ -86,7 +84,15 @@ border-bottom: 1px solid #e5e7eb;
 }
 .user-name {
     font-size: 14px;
-    color: #374151;
+    color: var(--text-secondary);
+}
+.user-avatar {
+    background: var(--brand-primary-soft);
+    color: var(--brand-primary-dark);
+}
+:deep(.el-button) {
+    border-color: var(--border-color);
+    color: var(--brand-primary-dark);
 }
 }
 

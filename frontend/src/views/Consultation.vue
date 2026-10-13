@@ -1,6 +1,6 @@
 <template>
     <div class="consultation-page">
-        <Pagehead title="咨询记录" />
+        <Pagehead title="复盘记录" />
         <el-table
             :data="tableData"
             style="width: 100%; margin-top: 20px"
@@ -13,7 +13,7 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column label="情绪日志" min-width="320">
+            <el-table-column label="复盘内容" min-width="320">
                 <template #default="scope">
                     <div class="session-title">{{scope.row.sessionTitle}}</div>
                     <div class="session-content">{{scope.row.lastMessageContent}}</div>
@@ -43,7 +43,7 @@
 
         <el-dialog
             v-model="detailDialogVisible"
-            title="咨询会话详情"
+            title="复盘详情"
             width="95%"
             top="3vh"
             class="session-detail-dialog"
@@ -77,7 +77,7 @@
                     :class="message.senderType === 1 ? 'message-user' : 'message-ai'"
                 >
                     <div class="message-header">
-                        <strong>{{ message.senderTypeDesc || (message.senderType === 1 ? '用户' : 'AI助手') }}</strong>
+                        <strong>{{ message.senderType === 1 ? '用户' : '节律教练' }}</strong>
                         <span class="message-time">{{ message.createdAt }}</span>
                     </div>
                     <div class="message-content">{{ message.content }}</div>
@@ -142,7 +142,7 @@ const handleDetail = async (row) => {
 </script>
 <style scoped>
 .consultation-page {
-    padding: 20px;
+    padding: 0;
 }
 .session-user {
     display: flex;
@@ -151,7 +151,7 @@ const handleDetail = async (row) => {
 }
 .session-user-name {
     font-weight: 500;
-    color: #303133;
+    color: var(--text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -178,8 +178,8 @@ const handleDetail = async (row) => {
 .session-summary {
     padding: 18px;
     color: #303133;
-    background: #f7f9f9;
-    border: 1px solid #ebeef0;
+    background: #f3f8f6;
+    border: 1px solid var(--border-color);
     border-radius: 10px;
 }
 .summary-row {
@@ -211,12 +211,8 @@ const handleDetail = async (row) => {
 .message-item + .message-item {
     margin-top: 14px;
 }
-.message-user {
-    background: #edf7ff;
-}
-.message-ai {
-    background: #f1faef;
-}
+.message-user { background: #eef5f3; }
+.message-ai { background: #fff8e9; }
 .message-header {
     display: flex;
     align-items: center;

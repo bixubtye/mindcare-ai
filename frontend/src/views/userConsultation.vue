@@ -4,52 +4,52 @@
       <aside class="consultation-sidebar">
         <section class="assistant-card">
           <div class="assistant-avatar">
-            <img :src="robotImage" alt="" class="robot-image" />
+            <BrandMark />
           </div>
-          <h2>AI助手</h2>
-          <p class="online-status"><span class="status-dot"></span>在线服务中</p>
+          <h2>节律教练</h2>
+          <p class="online-status"><span class="status-dot"></span>可以开始复盘</p>
         </section>
 
         <section class="mood-card">
-          <h2>情绪花园</h2>
+          <h2>今日状态</h2>
           <div class="mood-score">
             <strong>{{ currentEmotion.primaryEmotion }}</strong>
             <span>{{ currentEmotion.emotionScore }}</span>
           </div>
           <p class="mood-today">
-            <span>今天感觉</span><strong>{{ currentEmotion.isNegative ? '需要关注' : '很不错' }}</strong>
+            <span>当前感受</span><strong>{{ currentEmotion.primaryEmotion }}</strong>
           </p>
           <p class="mood-level">
             <span class="mood-dots" aria-hidden="true">
               <i v-for="index in Math.min(3, (currentEmotion.riskLevel ?? 0) + 1)" :key="index"></i>
             </span>
-            {{ ['正常', '关注', '严重', '危机'][currentEmotion.riskLevel] || '正常' }}
+            {{ ['状态稳定', '有些波动', '需要支持', '立即求助'][currentEmotion.riskLevel] || '状态稳定' }}
           </p>
           <div v-if="currentEmotion.suggestion" class="mood-advice">
-            <span class="advice-icon" aria-hidden="true">💝</span>
+            <span class="advice-icon" aria-hidden="true">○</span>
             <div>
-              <strong>给你的小建议</strong>
+              <strong>今日建议</strong>
               <span>{{ currentEmotion.suggestion }}</span>
             </div>
           </div>
           <div v-if="currentEmotion.improvementSuggestions?.length" class="mood-actions">
-            <h3>治愈小行动</h3>
+            <h3>可以试试</h3>
             <div v-for="item in currentEmotion.improvementSuggestions" :key="item" class="mood-action-item">
-              <span aria-hidden="true">✨</span>
+              <span class="action-dot" aria-hidden="true"></span>
               <span>{{ item }}</span>
             </div>
           </div>
           <div v-if="currentEmotion.riskLevel >= 2" class="mood-reminder">
-            <span class="advice-icon" aria-hidden="true">🤗</span>
+            <span class="advice-icon" aria-hidden="true">!</span>
             <div>
-              <strong>{{ currentEmotion.riskLevel === 3 ? '紧急安全支持' : '温馨提醒' }}</strong>
+              <strong>{{ currentEmotion.riskLevel === 3 ? '立即寻求帮助' : '需要额外支持' }}</strong>
               <span>{{ currentEmotion.riskDescription }}</span>
             </div>
           </div>
         </section>
 
         <section class="history-card">
-          <h2>会话历史</h2>
+          <h2>复盘记录</h2>
           <el-scrollbar class="history-scrollbar" always>
             <div v-if="sessionList.length" class="history-list">
               <div
@@ -61,7 +61,7 @@
               >
                 <div class="history-heading">
                   <strong class="history-title" :title="session.sessionTitle">{{ session.sessionTitle }}</strong>
-                  <el-button @click="handleDeleteSession(session.id)" class="history-delete" type="danger" text :icon="Delete" aria-label="删除会话" />
+                  <el-button @click="handleDeleteSession(session.id)" class="history-delete" type="danger" text :icon="Delete" aria-label="删除复盘记录" />
                 </div>
                 <span class="history-time">{{ session.startedAt }}</span>
                 <p class="history-preview">{{ session.lastMessageContent || '暂无消息' }}</p>
@@ -71,25 +71,21 @@
                 </div>
               </div>
             </div>
-            <p v-else class="history-empty">暂无会话记录</p>
+            <p v-else class="history-empty">暂无复盘记录</p>
           </el-scrollbar>
         </section>
       </aside>
 
-      <section class="chat-card" aria-label="AI心理咨询">
+      <section class="chat-card" aria-label="压力事件复盘">
         <header class="chat-header">
           <div class="chat-heading">
-            <span class="heart-badge" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 21.35 10.55 20C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.51L12 21.35Z" />
-              </svg>
-            </span>
+            <BrandMark tone="light" class="heart-badge" />
             <div>
-              <h2>AI助手</h2>
-              <p>您的贴心AI心理健康助手</p>
+              <h2>节律教练</h2>
+              <p>陪你梳理压力事件与当下状态</p>
             </div>
           </div>
-          <el-button circle :disabled="isAiTyping" @click="createNewSession" title="创建新会话">
+          <el-button circle :disabled="isAiTyping" @click="createNewSession" title="新建复盘" aria-label="新建复盘">
             <el-icon><Plus /></el-icon>
           </el-button>
         </header>
@@ -97,11 +93,11 @@
         <div class="chat-messages">
           <div v-if="message.length===0" class="assistant-message">
             <span class="message-avatar" aria-hidden="true">
-              <img :src="robotImage" alt="" class="robot-image" />
+              <BrandMark />
             </span>
             <div class="message-content">
               <p  class="message-bubble">
-                您好！我是小暖，您的AI心理健康助手。很高兴陪伴您，为您提供温暖的心理支持。请告诉我，今天您感觉怎么样？有什么想要分享的吗？
+                你好，我是节律教练。可以从最近最占据你注意力的一件事说起，我会陪你把压力来源和可以尝试的小调整理清楚。
               </p>
               <span class="message-time">刚刚</span>
             </div>
@@ -117,14 +113,14 @@
                 <path d="M3.5 19c.35-3.4 2.35-5.5 5.5-5.5s5.15 2.1 5.5 5.5" />
                 <path d="M15 5.5a3 3 0 0 1 0 5.8M16.5 13.5c2.35.65 3.75 2.5 4 5" />
               </svg>
-              <img v-else :src="robotImage" alt="" class="robot-image" />
+              <BrandMark v-else />
             </span>
             <div class="message-content">
               <p class="message-bubble">
                 <span
                   v-if="msg.senderType == 2 && isAiTyping && !msg.content"
                   class="typing-dots"
-                  aria-label="AI正在输入"
+                  aria-label="节律教练正在输入"
                 >
                   <i></i><i></i><i></i>
                 </span>
@@ -139,7 +135,7 @@
           <div class="composer-main">
            <el-input
            v-model="userMessage"
-           placeholder="请输入您想要分享的内容..."
+           placeholder="可以从最近最占据你注意力的一件事说起…"
            type="textarea"
            :rows="3"
            :disabled="isAiTyping"
@@ -162,12 +158,12 @@
 </template>
 
 <script setup>
-import robotImage from '@/assets/robot.png'
 import { Promotion, ChatRound, Clock, Delete } from '@element-plus/icons-vue';
 import { ref, onMounted } from 'vue'
 import { startSession,getSessionList,deleteSession,getSessionDetail,getSessionEmotion } from '@/api/frontend'
 import { ElMessage } from 'element-plus'
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import BrandMark from '@/components/BrandMark.vue'
 const handlkeyDown=(e)=>{
   if(e.key==='Enter'){
   }
@@ -223,7 +219,7 @@ const startNewSession=(massage)=>{
         initialMessage:massage
     }
     if(currentSession.value.sessionTitle==='新会话'){
-        sessionParams.sessionTitle='AI助手-'+(new Date()).toLocaleString()
+        sessionParams.sessionTitle='今日复盘-'+(new Date()).toLocaleString()
     }
     else{
         sessionParams.sessionTitle=currentSession.value.sessionTitle
@@ -304,7 +300,7 @@ const startAiResponse=(sessionId,userMassage)=>{
             if(ok && payload.data&&payload.data.content){
                 aiMessage.content+=payload.data.content
             }else if(!ok){
-                handleError(payload.message || 'AI回复失败')
+                handleError(payload.message || '回复失败')
             }
 
         },
@@ -318,10 +314,10 @@ const startAiResponse=(sessionId,userMassage)=>{
 const handleError=(error)=>{
     const aiMessage=message.value[message.value.length-1]
     if(aiMessage){
-        aiMessage.content='AI回复失败'
+        aiMessage.content='回复失败，请稍后再试'
     }
     isAiTyping.value=false
-    ElMessage.error('AI回复失败')
+    ElMessage.error('回复失败')
 }
 //新建会话
 const createNewSession=()=>{
@@ -366,13 +362,13 @@ const message=ref([])
 const sessionList=ref([])
 const userMessage=ref('')
 const isAiTyping=ref(false)
-// 情绪花园
+// 当前状态
 const DEFAULT_EMOTION = {
   primaryEmotion: '中性',
   emotionScore: 50,
   isNegative: false,
   riskLevel: 0,
-  suggestion: '情绪状态平稳',
+  suggestion: '当前状态相对稳定',
   improvementSuggestions: [],
   riskDescription: null,
   showWarmReminder: false
@@ -1108,5 +1104,81 @@ const currentEmotion = ref({...DEFAULT_EMOTION})
   .composer-details {
     font-size: 11px;
   }
+}
+</style>
+
+<style scoped>
+.consultation-page { min-height: calc(100vh - 74px); padding: 28px 20px 34px; background: var(--page-bg); color: var(--text-primary); }
+.consultation-shell { grid-template-columns: 310px minmax(0, 1fr); gap: 20px; max-width: 1280px; }
+.assistant-card, .mood-card, .history-card, .chat-card { border-color: var(--border-color); background: #fff; box-shadow: var(--shadow-sm); }
+.assistant-card { height: 156px; padding: 17px 16px; border-radius: var(--radius-lg); }
+.assistant-avatar { width: 58px; height: 58px; background: transparent; box-shadow: none; }
+.assistant-avatar :deep(.brand-mark), .message-avatar :deep(.brand-mark) { width: 100%; height: 100%; border-radius: inherit; }
+.assistant-card h2 { margin-top: 10px; color: var(--brand-primary-dark); }
+.online-status { margin-top: 7px; color: var(--brand-primary); font-weight: 600; }
+.status-dot { background: var(--brand-primary); box-shadow: 0 0 0 4px var(--brand-primary-soft); }
+.mood-card { min-height: auto; padding: 20px 18px; border-radius: var(--radius-lg); background: #f7fbf9; }
+.mood-card h2, .history-card h2 { color: var(--text-primary); }
+.mood-score { width: 86px; height: 86px; margin: 18px auto 8px; border-color: #fff; background: linear-gradient(145deg, #6fa89f, #347c72); box-shadow: 0 7px 18px rgba(52,124,114,.15); }
+.mood-today { gap: 16px; font-size: 14px; }
+.mood-today span { color: var(--text-secondary); }
+.mood-today strong { color: var(--text-primary); font-size: 16px; }
+.mood-level { margin: 14px 0 16px; color: var(--text-secondary); }
+.mood-dots i, .mood-dots i:nth-child(2), .mood-dots i:nth-child(3) { background: var(--brand-primary); }
+.mood-advice, .mood-action-item { border: 1px solid var(--border-color); box-shadow: none; }
+.mood-advice { min-height: 70px; padding: 11px 14px; border-radius: 13px; }
+.advice-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; flex: none; border-radius: 50%; background: var(--brand-primary-soft); color: var(--brand-primary-dark); font-size: 16px; font-weight: 800; }
+.mood-advice strong, .mood-advice div span, .mood-actions h3, .mood-action-item { color: #52615e; }
+.mood-actions { gap: 8px; margin-top: 16px; }
+.mood-action-item { min-height: 44px; padding: 9px 13px; border-radius: 11px; }
+.action-dot { width: 7px; height: 7px; flex: none; border-radius: 50%; background: var(--brand-accent); }
+.mood-reminder { align-items: flex-start; min-height: 72px; margin-top: 16px; padding: 13px; border: 1px solid #e8c5c5; border-radius: 13px; background: var(--danger-soft); color: #913f3f; }
+.mood-reminder .advice-icon { background: #f6dede; color: var(--danger); }
+.history-card { height: 300px; padding: 18px; border-radius: var(--radius-lg); }
+.history-scrollbar :deep(.el-scrollbar__thumb) { background: #8ebbb2; }
+.history-item { min-height: 114px; border-color: transparent; }
+.history-item:hover { background: #f6faf8; }
+.history-item.is-active { border-color: #bdd8d1; background: var(--brand-primary-soft); }
+.chat-card { height: max(780px, calc(100vh - 130px)); border-radius: 20px; }
+.chat-header { height: 90px; padding: 0 24px; background: var(--brand-primary-dark); }
+.heart-badge { width: 50px; height: 50px; border-radius: 14px; box-shadow: none; }
+.chat-heading h2 { font-size: 21px; }
+.chat-heading p { color: rgba(255,255,255,.74); font-size: 13px; font-weight: 500; }
+.chat-header :deep(.el-button) { border-color: rgba(255,255,255,.32); background: rgba(255,255,255,.1); color: #fff; }
+.chat-messages { padding: 28px 25px; background: #fbfcfb; }
+.message-avatar { width: 38px; height: 38px; background: transparent; }
+.message-avatar.user-avatar { background: #52615e; }
+.message-bubble { padding: 12px 16px; border-color: var(--border-color); border-radius: 6px 16px 16px 16px; box-shadow: none; color: var(--text-primary); font-size: 15px; line-height: 1.7; }
+.user-message { justify-content: flex-end; flex-direction: row-reverse; }
+.user-message .message-bubble { border-color: #cee0dc; border-radius: 16px 6px 16px 16px; background: var(--brand-primary-soft); }
+.user-message .message-time { text-align: right; }
+.chat-composer { height: auto; min-height: 132px; padding: 18px 22px; border-top-color: var(--border-color); }
+.composer-main :deep(.el-textarea__inner) { min-height: 76px !important; resize: none; border: 0; border-radius: 11px; color: var(--text-primary); box-shadow: 0 0 0 1px var(--border-color) inset; }
+.composer-main :deep(.el-textarea__inner:focus) { box-shadow: 0 0 0 1px var(--brand-primary) inset, 0 0 0 3px rgba(52,124,114,.1); }
+.composer-details { color: var(--text-muted); font-size: 12px; }
+.send-symbol { width: 56px; height: 56px; border-radius: 15px; background: var(--brand-primary); box-shadow: 0 8px 18px rgba(52,124,114,.18); }
+.send-symbol :deep(.el-button) { border-radius: 15px; }
+@media (max-width: 1050px) { .consultation-shell { grid-template-columns: 270px minmax(0, 1fr); } }
+@media (max-width: 800px) {
+  .consultation-page { padding: 20px 14px 28px; }
+  .consultation-shell { grid-template-columns: 1fr; }
+  .consultation-sidebar { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .mood-card { grid-row: span 2; }
+  .history-card { height: 172px; }
+  .chat-card { height: min(760px, calc(100vh - 100px)); min-height: 620px; }
+}
+@media (max-width: 560px) {
+  .consultation-sidebar { display: flex; }
+  .history-card { height: 220px; }
+  .chat-card { height: calc(100vh - 92px); min-height: 600px; }
+  .chat-header { height: 82px; padding: 0 14px; }
+  .heart-badge { width: 42px; height: 42px; }
+  .chat-heading p { max-width: 190px; }
+  .chat-messages { padding: 18px 12px; }
+  .assistant-message, .user-message { gap: 8px; }
+  .message-avatar { width: 32px; height: 32px; }
+  .message-content { max-width: calc(100% - 40px); }
+  .chat-composer { min-height: 116px; padding: 13px 12px; }
+  .send-symbol { width: 48px; height: 48px; }
 }
 </style>

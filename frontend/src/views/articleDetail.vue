@@ -2,8 +2,8 @@
   <main class="article-detail-page">
     <header class="detail-hero">
       <div class="hero-title">
-        <el-icon><Reading /></el-icon>
-        <h1>知识文章详情</h1>
+        <BrandMark tone="light" class="hero-mark" />
+        <div><h1>工具文章</h1><p>挑一件适合此刻的小事开始</p></div>
       </div>
     </header>
 
@@ -38,7 +38,7 @@
         </el-card>
 
         <el-card class="content-card" shadow="never">
-          <h2 class="section-title">正文内容</h2>
+          <h2 class="section-title">内容</h2>
           <div class="article-body" v-html="article.content"></div>
         </el-card>
       </template>
@@ -54,6 +54,7 @@ import { Calendar, Monitor, Reading, UserFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useRoute } from 'vue-router'
 import { getKnowledgeDetail } from '@/api/frontend'
+import BrandMark from '@/components/BrandMark.vue'
 
 const route = useRoute()
 const article = ref(null)
@@ -226,4 +227,24 @@ onMounted(async () => {
     gap: 12px;
   }
 }
+</style>
+
+<style scoped>
+.article-detail-page { min-height: calc(100vh - 158px); background: var(--page-bg); color: var(--text-primary); }
+.detail-hero { height: 140px; background: var(--brand-primary-dark); }
+.hero-title { align-items: center; width: min(900px, calc(100% - 48px)); margin: 0 auto; padding: 0; }
+.hero-mark { width: 58px; height: 58px; border-radius: 16px; }
+.hero-title h1 { font-size: 32px; }
+.hero-title p { margin: 8px 0 0; color: rgba(255,255,255,.67); font-size: 13px; }
+.detail-content { width: min(900px, calc(100% - 40px)); padding: 28px 0 54px; }
+.article-card, .content-card { border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+.content-card { margin-top: 18px; }
+.section-title { color: var(--text-primary); font-size: 18px; }
+.article-title { color: var(--text-primary); font-size: clamp(26px, 4vw, 34px); }
+.article-summary { border-left-color: var(--brand-accent); background: var(--brand-accent-soft); color: #5d594e; }
+.article-extra { color: var(--text-secondary); }
+.article-body { max-width: 760px; margin: 0 auto; color: #364542; font-size: 16px; line-height: 2; }
+.article-body :deep(h1), .article-body :deep(h2), .article-body :deep(h3), .article-body :deep(h4) { color: var(--text-primary); }
+.article-body :deep(a) { color: var(--brand-primary-dark); text-underline-offset: 3px; }
+@media (max-width: 800px) { .detail-hero { height: 120px; } .hero-title { width: calc(100% - 32px); } .hero-mark { width: 50px; height: 50px; } .hero-title h1 { font-size: 27px; } .detail-content { width: calc(100% - 28px); } }
 </style>

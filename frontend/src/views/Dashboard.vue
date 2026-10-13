@@ -2,7 +2,7 @@
     <div class="dashboard-page">
         <div class="overview-grid">
             <article class="overview-card">
-                <div class="card-icon card-icon--purple">
+                <div class="card-icon card-icon--primary">
                     <el-icon><User /></el-icon>
                 </div>
                 <div class="card-content">
@@ -12,42 +12,42 @@
                 </div>
             </article>
             <article class="overview-card">
-                <div class="card-icon card-icon--pink">
+                <div class="card-icon card-icon--accent">
                     <el-icon><Notebook /></el-icon>
                 </div>
                 <div class="card-content">
-                    <p class="card-title">情绪日志</p>
+                    <p class="card-title">状态打卡</p>
                     <p class="card-value">{{ aiData.systemOverview?.totalDiaries ?? 0 }}</p>
                     <p class="card-subtitle">今日新增: {{ aiData.systemOverview?.todayNewDiaries ?? 0 }}</p>
                 </div>
             </article>
             <article class="overview-card">
-                <div class="card-icon card-icon--blue">
+                <div class="card-icon card-icon--teal">
                     <el-icon><ChatDotRound /></el-icon>
                 </div>
                 <div class="card-content">
-                    <p class="card-title">咨询会话</p>
+                    <p class="card-title">复盘会话</p>
                     <p class="card-value">{{ aiData.systemOverview?.totalSessions ?? 0 }}</p>
                     <p class="card-subtitle">今日新增: {{ aiData.systemOverview?.todayNewSessions ?? 0 }}</p>
                 </div>
             </article>
             <article class="overview-card">
-                <div class="card-icon card-icon--green">
+                <div class="card-icon card-icon--sage">
                     <el-icon><Sunny /></el-icon>
                 </div>
                 <div class="card-content">
-                    <p class="card-title">平均情绪</p>
+                    <p class="card-title">平均状态</p>
                     <p class="card-value">{{ aiData.systemOverview?.avgMoodScore ?? 0 }}/10</p>
-                    <p class="card-subtitle">情绪健康指数</p>
+                    <p class="card-subtitle">近况指数</p>
                 </div>
             </article>
         </div>
         <el-row style="margin-top: 20px;" :gutter="20">
-            <el-col :span="12">
+            <el-col :xs="24" :md="12">
                 <el-card style="width: 100%;">
                     <template #header>
                         <div class="flex-box">
-                            情绪趋势分析
+                            状态趋势
                         </div>
                     </template>
                     <div>
@@ -55,10 +55,10 @@
                     </div>
                 </el-card>
             </el-col>
-            <el-col :span="12">
+            <el-col :xs="24" :md="12">
                 <el-card style="width: 100%;">
                     <template #header>
-                        <div class="flex-box">咨询会话统计</div>
+                        <div class="flex-box">复盘活动统计</div>
                     </template>
                     <div class="consultation-summary">
                         <div>
@@ -119,7 +119,7 @@ const initEmotionalChart=()=>{
     const TreadData=aiData.value.emotionTrend
     emotionalChart.setOption({
         title: {
-            text: '情绪趋势分析',
+            text: '状态趋势',
             textStyle: {
                fontSize: 16,
                fontWeight: 600
@@ -131,7 +131,7 @@ const initEmotionalChart=()=>{
             trigger: 'axis',
         },
         legend: {
-            data: ['平均情绪评分','记录数量'],
+            data: ['平均状态评分','打卡数量'],
             top: 40
         },
         xAxis: {
@@ -140,7 +140,7 @@ const initEmotionalChart=()=>{
         },
         yAxis: [{
             type: 'value',
-            name: '情绪评分',
+            name: '状态评分',
             position: 'left'
         },{
         type: 'value',
@@ -148,12 +148,12 @@ const initEmotionalChart=()=>{
         position: 'right'
         }],
         series: [{
-            name: '情绪评分',
+            name: '状态评分',
             type: 'line',
             data: TreadData.map(item => item.avgMoodScore),
             smooth: true
         },{
-            name: '记录数量',
+            name: '打卡数量',
             type: 'line',
             data: TreadData.map(item => item.recordCount),
             smooth: true
@@ -170,13 +170,13 @@ const initConsultationChart=()=>{
     const trendData = aiData.value.consultationStats.dailyTrend
     consultationChart.setOption({
         title: {
-            text: '咨询活动统计',
+            text: '复盘活动统计',
             left: 'center',
             textStyle: { fontSize: 16, fontWeight: 600 }
         },
         tooltip: { trigger: 'axis' },
         legend: {
-            data: ['会话数量', '参与用户数'],
+            data: ['复盘数量', '参与用户数'],
             top: 30
         },
         grid: { top: 70, left: 45, right: 20, bottom: 35 },
@@ -187,15 +187,15 @@ const initConsultationChart=()=>{
         },
         yAxis: { type: 'value' },
         series: [{
-            name: '会话数量',
+            name: '复盘数量',
             type: 'bar',
             data: trendData.map(item => item.sessionCount),
-            itemStyle: { color: '#5b9fe8' }
+            itemStyle: { color: '#347c72' }
         },{
             name: '参与用户数',
             type: 'bar',
             data: trendData.map(item => item.userCount),
-            itemStyle: { color: '#f2b440' }
+            itemStyle: { color: '#e8b968' }
         }]
     })
 }
@@ -215,7 +215,7 @@ const initUserActivityChart=()=>{
         },
         tooltip: { trigger: 'axis' },
         legend: {
-            data: ['活跃用户', '新增用户', '日记用户', '咨询用户'],
+            data: ['活跃用户', '新增用户', '打卡用户', '复盘用户'],
             top: 30
         },
         grid: { top: 70, left: 45, right: 25, bottom: 40 },
@@ -231,26 +231,26 @@ const initUserActivityChart=()=>{
             type: 'line',
             data: activityData.map(item => item.activeUsers),
             smooth: true,
-            itemStyle: { color: '#8b83e6' },
-            areaStyle: { color: 'rgba(139, 131, 230, 0.18)' }
+            itemStyle: { color: '#347c72' },
+            areaStyle: { color: 'rgba(52, 124, 114, 0.14)' }
         },{
             name: '新增用户',
             type: 'line',
             data: activityData.map(item => item.newUsers),
             smooth: true,
-            itemStyle: { color: '#efc15b' }
+            itemStyle: { color: '#e8b968' }
         },{
-            name: '日记用户',
+            name: '打卡用户',
             type: 'line',
             data: activityData.map(item => item.diaryUsers),
             smooth: true,
-            itemStyle: { color: '#45b89c' }
+            itemStyle: { color: '#6fa89f' }
         },{
-            name: '咨询用户',
+            name: '复盘用户',
             type: 'line',
             data: activityData.map(item => item.consultationUsers),
             smooth: true,
-            itemStyle: { color: '#efaa92' }
+            itemStyle: { color: '#91a69f' }
         }]
     })
 }
@@ -263,9 +263,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.dashboard-page {
-    background: #f5f7fa;
-}
+.dashboard-page { background: #fff; }
 
 .overview-grid {
     display: grid;
@@ -281,9 +279,9 @@ onMounted(async () => {
     min-height: 96px;
     padding: 14px 18px;
     background: #fff;
-    border: 1px solid #ebeef5;
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(31, 45, 61, 0.08);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
     box-sizing: border-box;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
@@ -309,21 +307,10 @@ onMounted(async () => {
     font-size: 32px;
 }
 
-.card-icon--purple {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.card-icon--pink {
-    background: linear-gradient(135deg, #df70d5 0%, #ef5d79 100%);
-}
-
-.card-icon--blue {
-    background: linear-gradient(135deg, #49aeea 0%, #55dce6 100%);
-}
-
-.card-icon--green {
-    background: linear-gradient(135deg, #52d98c 0%, #65e5c9 100%);
-}
+.card-icon--primary { background: #347c72; }
+.card-icon--accent { background: #d6a955; }
+.card-icon--teal { background: #5c948b; }
+.card-icon--sage { background: #809b8d; }
 
 .card-content {
     min-width: 0;
@@ -401,4 +388,7 @@ onMounted(async () => {
         height: 52px;
     }
 }
+
+.dashboard-page :deep(.el-card) { border-color: var(--border-color); box-shadow: var(--shadow-sm); }
+.dashboard-page :deep(.el-row) { row-gap: 20px; }
 </style>

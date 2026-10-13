@@ -1,13 +1,17 @@
 <template>
   <main class="diary-page">
     <header class="diary-banner">
-      <div class="banner-content"><span aria-hidden="true">♥</span><h1>情绪日记</h1></div>
+      <div class="banner-content">
+        <BrandMark tone="light" class="banner-mark" />
+        <div><p>用简短记录留住每天的变化</p><h1>每日状态打卡</h1></div>
+      </div>
     </header>
 
     <div class="diary-content">
       <section class="diary-card score-card">
-        <h2>今日情绪评分</h2>
-        <p>您今天的整体情绪状态如何？（1-10分）</p>
+        <span class="step-label">01 · 状态评分</span>
+        <h2>今日状态评分</h2>
+        <p>综合睡眠、压力和感受，你会给今天的状态打几分？</p>
         <el-rate
           v-model="moodScore"
           :max="10"
@@ -21,7 +25,8 @@
       </section>
 
       <section class="diary-card">
-        <h2>主要情绪</h2>
+        <span class="step-label">02 · 当下感受</span>
+        <h2>今天最明显的感受</h2>
         <div class="emotion-grid">
           <button
             v-for="mood in emotions"
@@ -39,14 +44,9 @@
       </section>
 
       <section class="diary-card detail-card">
-        <h2>详细记录</h2>
+        <span class="step-label">03 · 影响与记录</span>
+        <h2>补充记录</h2>
         <el-form label-position="top">
-          <el-form-item label="情绪触发因素">
-            <el-input v-model="emotionTriggers" type="textarea" :rows="3" maxlength="1000" show-word-limit placeholder="今天什么事情影响了您的情绪？" />
-          </el-form-item>
-          <el-form-item label="今日感想">
-            <el-input v-model="diaryContent" type="textarea" :rows="5" maxlength="2000" show-word-limit placeholder="写下您今天的想法、感受或发生的有趣事情..." />
-          </el-form-item>
           <div class="select-row">
             <el-form-item label="睡眠质量">
               <el-select v-model="sleepQuality" placeholder="请选择">
@@ -59,9 +59,15 @@
               </el-select>
             </el-form-item>
           </div>
+          <el-form-item label="影响状态的事件">
+            <el-input v-model="emotionTriggers" type="textarea" :rows="3" maxlength="1000" show-word-limit placeholder="今天发生了什么，让你的状态出现变化？" />
+          </el-form-item>
+          <el-form-item label="补充记录">
+            <el-input v-model="diaryContent" type="textarea" :rows="5" maxlength="2000" show-word-limit placeholder="可以写下此刻的想法、身体感受，或任何想记住的细节…" />
+          </el-form-item>
           <div class="form-actions">
             <el-button @click="resetForm">重置</el-button>
-            <el-button type="primary" :loading="submitting" @click="submitDiary">提交记录</el-button>
+            <el-button type="primary" :loading="submitting" @click="submitDiary">保存今日打卡</el-button>
           </div>
         </el-form>
       </section>
@@ -74,6 +80,7 @@ import dayjs from 'dayjs'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { createEmotionDiary } from '@/api/frontend'
+import BrandMark from '@/components/BrandMark.vue'
 
 const moodScore = ref(0)
 const dominantEmotion = ref('')
@@ -107,7 +114,7 @@ const resetForm = () => {
 }
 
 const submitDiary = async () => {
-  if (!moodScore.value || !dominantEmotion.value) return ElMessage.warning('请完成情绪评分并选择主要情绪')
+  if (!moodScore.value || !dominantEmotion.value) return ElMessage.warning('请完成状态评分并选择今天最明显的感受')
   submitting.value = true
   try {
     await createEmotionDiary({
@@ -119,7 +126,7 @@ const submitDiary = async () => {
       sleepQuality: sleepQuality.value,
       stressLevel: stressLevel.value
     })
-    ElMessage.success('情绪日记记录成功')
+    ElMessage.success('今日状态已记录')
     resetForm()
   } catch {
     ElMessage.error('提交失败，请稍后重试')
@@ -266,5 +273,39 @@ const submitDiary = async () => {
   .emotion-grid { grid-template-columns: repeat(2, 1fr); }
   .select-row { grid-template-columns: 1fr; gap: 0; }
   .diary-card { padding: 20px; }
+}
+</style>
+
+<style scoped>
+.diary-page { min-height: calc(100vh - 74px); background: var(--page-bg); color: var(--text-primary); }
+.diary-banner { padding: 44px 24px; background: var(--brand-primary-dark); }
+.banner-content, .diary-content { width: min(920px, calc(100% - 40px)); }
+.banner-content { gap: 16px; }
+.banner-mark { width: 58px; height: 58px; border-radius: 16px; }
+.banner-content p { margin: 0 0 7px; color: rgba(255,255,255,.68); font-size: 13px; letter-spacing: .04em; }
+.banner-content h1 { font-size: 32px; }
+.diary-content { gap: 18px; padding: 24px 0 48px; }
+.diary-card { padding: 26px; border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+.step-label { display: block; margin-bottom: 7px; color: var(--brand-primary); font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+.diary-card h2 { margin-bottom: 18px; color: var(--text-primary); font-size: 22px; }
+.score-card p { margin-bottom: 20px; color: var(--text-secondary); }
+.score-card :deep(.el-rate__text) { color: var(--text-secondary); }
+.emotion-grid { gap: 10px; }
+.emotion-item { min-height: 96px; border: 1px solid var(--border-color); border-radius: 12px; color: #465653; }
+.emotion-item:hover { border-color: #9fc5bc; background: #f6fbf9; transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.emotion-item.selected { border-color: var(--brand-primary); background: var(--brand-primary-soft); color: var(--brand-primary-dark); transform: none; box-shadow: 0 0 0 2px rgba(52,124,114,.1); }
+.emotion-icon { font-size: 34px; filter: saturate(.7); }
+.detail-card :deep(.el-form-item__label) { color: #465653; font-size: 14px; font-weight: 650; }
+.detail-card :deep(.el-textarea__inner) { line-height: 1.65; }
+.form-actions { justify-content: flex-end; }
+.form-actions :deep(.el-button) { min-width: 112px; }
+@media (max-width: 720px) {
+  .diary-banner { padding: 32px 0; }
+  .banner-content, .diary-content { width: calc(100% - 28px); }
+  .banner-content h1 { font-size: 27px; }
+  .diary-card { padding: 20px 16px; }
+  .emotion-item { min-height: 88px; }
+  .form-actions { flex-direction: column-reverse; }
+  .form-actions :deep(.el-button) { width: 100%; margin: 0; }
 }
 </style>

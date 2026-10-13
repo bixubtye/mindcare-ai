@@ -2,16 +2,16 @@
   <main class="knowledge-page">
     <header class="knowledge-hero">
       <div class="hero-title">
-        <el-icon><Reading /></el-icon>
-        <h1>心理健康知识库</h1>
+        <BrandMark tone="light" class="hero-mark" />
+        <div><h1>应对工具箱</h1><p>把复杂的压力，拆成今天能尝试的一小步</p></div>
       </div>
     </header>
 
     <div class="knowledge-content">
       <aside class="recommend-card" aria-labelledby="recommend-title">
-        <h2 id="recommend-title">推荐阅读</h2>
-        <ul class="recommend-list">
-          <li v-for="article in recommendedArticles" :key="article.id" @click="goToArticle(article.id)">
+        <h2 id="recommend-title">本周推荐</h2>
+        <ul v-if="recommendedArticles.length" class="recommend-list">
+          <li v-for="article in recommendedArticles" :key="article.id" tabindex="0" @click="goToArticle(article.id)" @keyup.enter="goToArticle(article.id)">
             <h3 :title="article.title">{{ article.title }}</h3>
             <div class="read-count">
               <el-icon><Histogram /></el-icon>
@@ -19,11 +19,12 @@
             </div>
           </li>
         </ul>
+        <el-empty v-else :image-size="64" description="暂无推荐内容" />
       </aside>
 
       <section class="article-section">
         <div class="article-list">
-          <article v-for="article in articles" :key="article.id" class="article-card" @click="goToArticle(article.id)">
+          <article v-for="article in articles" :key="article.id" class="article-card" tabindex="0" @click="goToArticle(article.id)" @keyup.enter="goToArticle(article.id)">
             <img
               v-if="article.coverImage"
               :src="getCoverUrl(article.coverImage)"
@@ -42,10 +43,11 @@
               <p><el-icon><UserFilled /></el-icon>{{ article.authorName }}</p>
               <p><el-icon><Calendar /></el-icon>{{ article.publishedAt?.slice(0, 10) }}</p>
               <p class="article-views">
-                <el-icon><Monitor /></el-icon>观看人数：{{ article.readCount ?? 0 }}
+                <el-icon><Monitor /></el-icon>阅读量：{{ article.readCount ?? 0 }}
               </p>
             </div>
           </article>
+          <el-empty v-if="!articles.length" description="暂时还没有工具文章" />
         </div>
 
         <el-pagination
@@ -68,6 +70,7 @@ import { onMounted, ref } from 'vue'
 import { Calendar, Histogram, Monitor, Reading, UserFilled } from '@element-plus/icons-vue'
 import { getKnowledgeList } from '@/api/frontend'
 import { fileBaseURL } from '@/config'
+import BrandMark from '@/components/BrandMark.vue'
 
 const recommendedArticles = ref([])
 const articles = ref([])
@@ -368,5 +371,44 @@ onMounted(() => {
     overflow-x: auto;
     justify-content: flex-start;
   }
+}
+</style>
+
+<style scoped>
+.knowledge-page { min-height: calc(100vh - 158px); background: var(--page-bg); color: var(--text-primary); }
+.knowledge-hero { height: 150px; background: var(--brand-primary-dark); }
+.hero-title { align-items: center; width: min(1240px, calc(100% - 48px)); margin: 0 auto; padding: 0; }
+.hero-mark { width: 62px; height: 62px; border-radius: 17px; }
+.hero-title h1 { font-size: 34px; }
+.hero-title p { margin: 9px 0 0; color: rgba(255,255,255,.68); font-size: 14px; }
+.knowledge-content { grid-template-columns: 300px minmax(0,1fr); gap: 20px; width: min(1240px, calc(100% - 40px)); padding: 24px 0 50px; }
+.recommend-card, .article-card { border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); }
+.recommend-card { position: sticky; top: 98px; width: 300px; padding: 20px; }
+.recommend-card h2 { color: var(--text-primary); }
+.recommend-list { gap: 8px; }
+.recommend-list li { padding: 12px 10px 12px 14px; border-left: 3px solid #d6a955; border-radius: 0 9px 9px 0; cursor: pointer; transition: background-color .18s ease; }
+.recommend-list li:hover, .recommend-list li:focus-visible { background: var(--brand-accent-soft); }
+.recommend-list h3 { margin-bottom: 8px; color: var(--text-primary); font-size: 15px; }
+.read-count { color: var(--text-muted); font-size: 12px; }
+.article-list { gap: 16px; }
+.article-card { grid-template-columns: 230px minmax(0,1fr); min-height: 176px; padding: 14px; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.article-card:hover, .article-card:focus-visible { border-color: #bfd7d1; box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.article-cover { width: 230px; height: 148px; border-radius: 10px; }
+.article-cover-placeholder { background: linear-gradient(145deg, #eaf5f1, #f8fbfa); color: var(--brand-primary); }
+.article-heading h2 { color: var(--text-primary); font-size: 19px; }
+.article-heading span { border-radius: 999px; background: var(--brand-primary-soft); color: var(--brand-primary-dark); }
+.article-info { color: var(--text-secondary); }
+.article-info p { gap: 8px; margin: 7px 0; color: var(--text-secondary); font-size: 14px; }
+.article-info .article-views { margin-top: 17px; }
+@media (max-width: 1100px) { .knowledge-content { grid-template-columns: 1fr; } .recommend-card { position: static; width: 100%; } }
+@media (max-width: 800px) {
+  .knowledge-hero { height: 128px; }
+  .hero-title { width: calc(100% - 32px); }
+  .hero-mark { width: 52px; height: 52px; }
+  .hero-title h1 { font-size: 27px; }
+  .hero-title p { font-size: 12px; }
+  .knowledge-content { width: calc(100% - 28px); }
+  .article-card { grid-template-columns: 1fr; }
+  .article-cover { width: 100%; height: auto; aspect-ratio: 16 / 9; }
 }
 </style>

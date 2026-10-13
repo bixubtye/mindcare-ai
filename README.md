@@ -1,8 +1,8 @@
 <div align="center">
 
-# MindCare AI · 心理健康陪伴平台
+# 校园节律 CampusRhythm · 大学生压力与作息韧性平台
 
-一个把 AI 对话、情绪分析、情绪日记、心理知识库与运营数据看板整合在一起的全栈项目。
+一个面向大学生日常压力管理的全栈项目，把状态打卡、压力事件复盘、应对工具箱与校园状态数据看板整合在一起，帮助用户看见自己的恢复节奏。
 
 [在线界面预览](https://bixubtye.github.io/mindcare-ai/) · [后端容器](https://github.com/bixubtye/mindcare-ai/pkgs/container/mindcare-ai) · [部署说明](#部署与运行)
 
@@ -14,10 +14,10 @@
 
 ## 项目亮点
 
-- 流式 AI 心理陪伴：基于 Spring AI 对接 SiliconFlow 的 OpenAI 兼容接口，通过 SSE 实时返回内容。
-- 情绪风险识别：结构化分析主要情绪、情绪强度与风险等级，并提供分级提示。
-- 完整用户闭环：注册登录、JWT 鉴权、会话管理、情绪日记与心理知识库。
-- 管理端能力：文章管理、咨询记录、情绪日志与聚合数据看板。
+- AI 压力复盘：基于 Spring AI 对接 SiliconFlow，通过 SSE 实时陪用户梳理压力来源与可执行的小调整。
+- 每日状态打卡：记录睡眠、压力与情绪，沉淀个人节律变化。
+- 完整用户闭环：注册登录、JWT 鉴权、复盘会话、状态记录与应对工具箱。
+- 管理端能力：工具内容、复盘记录、状态打卡与校园聚合数据看板。
 - 工程化交付：前后端自动化测试、GitHub Pages、GitHub Container Registry、Docker Compose 与初始化数据。
 
 ## 技术栈
@@ -97,10 +97,10 @@ npm run dev
 | 模块 | 接口示例 |
 | --- | --- |
 | 认证 | `POST /api/user/add`、`POST /api/user/login` |
-| AI 咨询 | `POST /api/psychological-chat/session/start`、`POST /api/psychological-chat/stream` |
+| 压力复盘 | `POST /api/psychological-chat/session/start`、`POST /api/psychological-chat/stream` |
 | 会话 | `GET /api/psychological-chat/sessions`、`GET /api/psychological-chat/sessions/{id}/messages` |
-| 情绪日记 | `POST /api/emotion-diary`、`GET /api/emotion-diary/admin/page` |
-| 知识库 | `GET /api/knowledge/article/page`、`POST /api/knowledge/article` |
+| 状态打卡 | `POST /api/emotion-diary`、`GET /api/emotion-diary/admin/page` |
+| 应对工具箱 | `GET /api/knowledge/article/page`、`POST /api/knowledge/article` |
 | 数据看板 | `GET /api/data-analytics/overview` |
 
 ## 自动化交付
@@ -122,4 +122,4 @@ cd frontend && npm run build
 
 ## 使用边界
 
-本项目用于技术展示与一般心理健康陪伴，不提供医学诊断，也不能替代专业心理咨询或紧急援助。若存在即时人身安全风险，请优先联系当地急救服务、危机干预热线或可信赖的人。
+本项目用于技术展示与大学生日常压力、作息和状态管理，不提供医学诊断，也不能替代专业心理咨询或紧急援助。若存在即时人身安全风险，请优先联系当地急救服务、危机干预热线或可信赖的人。

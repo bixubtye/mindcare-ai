@@ -1,6 +1,6 @@
 <template>
     <div class="emotional-page">
-        <Pagehead title="情绪日志" />
+        <Pagehead title="状态打卡记录" />
         <Tablesearch :formItem="formItem" @search="handleSearch" />
         <el-table
             v-loading="loading"
@@ -17,7 +17,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="diaryDate" label="记录日期" width="120" show-overflow-tooltip />
-            <el-table-column label="情绪评分" width="172">
+            <el-table-column label="状态评分" width="172">
                 <template #default="scope">
                     <el-rate
                         class="mood-rate"
@@ -35,8 +35,8 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="emotionTriggers" label="情绪触发因素" min-width="135" show-overflow-tooltip />
-            <el-table-column prop="diaryContent" label="日记内容" min-width="160" show-overflow-tooltip />
+            <el-table-column prop="emotionTriggers" label="影响状态的事件" min-width="135" show-overflow-tooltip />
+            <el-table-column prop="diaryContent" label="补充记录" min-width="160" show-overflow-tooltip />
             <el-table-column label="操作" width="105" align="center" fixed="right">
                 <template #default="scope">
                     <div class="action-buttons">
@@ -66,7 +66,7 @@
 
         <el-dialog
             v-model="detailDialogVisible"
-            title="情绪日记详情"
+            title="状态打卡详情"
             width="900px"
             top="3vh"
             class="emotion-detail-dialog"
@@ -92,9 +92,9 @@
                 </section>
 
                 <section class="detail-section">
-                    <h3 class="detail-section-title">情绪状态</h3>
+                    <h3 class="detail-section-title">状态记录</h3>
                     <el-descriptions :column="2" border>
-                        <el-descriptions-item label="情绪评分">
+                        <el-descriptions-item label="状态评分">
                             <div class="score-content">
                                 <el-rate
                                     :model-value="Number(selectedDiary.moodScore) || 0"
@@ -104,7 +104,7 @@
                                 <span>{{ displayValue(selectedDiary.moodScore) }}</span>
                             </div>
                         </el-descriptions-item>
-                        <el-descriptions-item label="主要情绪">
+                        <el-descriptions-item label="主要感受">
                             <el-tag effect="plain">
                                 {{ displayValue(selectedDiary.dominantEmotion) }}
                             </el-tag>
@@ -119,27 +119,27 @@
                 </section>
 
                 <section class="detail-section">
-                    <h3 class="detail-section-title">日记内容</h3>
+                    <h3 class="detail-section-title">补充记录</h3>
                     <el-descriptions :column="1" border>
-                        <el-descriptions-item label="情绪触发因素">
+                        <el-descriptions-item label="影响状态的事件">
                             <div class="pre-wrap-text">{{ displayValue(selectedDiary.emotionTriggers) }}</div>
                         </el-descriptions-item>
-                        <el-descriptions-item label="日记内容">
+                        <el-descriptions-item label="补充记录">
                             <div class="pre-wrap-text">{{ displayValue(selectedDiary.diaryContent) }}</div>
                         </el-descriptions-item>
                     </el-descriptions>
                 </section>
 
                 <section class="detail-section">
-                    <h3 class="detail-section-title">AI情绪分析结果</h3>
+                    <h3 class="detail-section-title">AI状态分析</h3>
                     <template v-if="aiAnalysis">
                         <el-descriptions :column="2" border>
-                            <el-descriptions-item label="主要情绪">
+                            <el-descriptions-item label="主要感受">
                                 <el-tag effect="plain" type="info">
                                     {{ displayValue(aiAnalysis.primaryEmotion) }}
                                 </el-tag>
                             </el-descriptions-item>
-                            <el-descriptions-item label="情绪强度">
+                            <el-descriptions-item label="状态强度">
                                 <div class="emotion-progress">
                                     <el-progress
                                         :percentage="emotionScore"
@@ -154,7 +154,7 @@
                                     {{ riskLevel.text }}
                                 </el-tag>
                             </el-descriptions-item>
-                            <el-descriptions-item label="情绪性质">
+                            <el-descriptions-item label="状态性质">
                                 <el-tag :type="emotionNature.type" effect="light">
                                     {{ emotionNature.text }}
                                 </el-tag>
@@ -172,7 +172,7 @@
                                 </div>
                                 <span v-else>--</span>
                             </el-descriptions-item>
-                            <el-descriptions-item label="专业建议" :span="2">
+                            <el-descriptions-item label="调整建议" :span="2">
                                 <div class="pre-wrap-text">{{ displayValue(aiAnalysis.suggestion) }}</div>
                             </el-descriptions-item>
                             <el-descriptions-item label="风险描述" :span="2">
@@ -236,7 +236,7 @@ const formItem = [
     },
     {
         prop: 'moodRange',
-        label: '情绪评分',
+        label: '状态评分',
         type: 'select',
         placeholder: '请选择评分范围',
         options: [
@@ -256,9 +256,9 @@ const formItem = [
     },
     {
         prop: 'dominantEmotion',
-        label: '主要情绪',
+        label: '主要感受',
         type: 'input',
-        placeholder: '请输入主要情绪'
+        placeholder: '请输入主要感受'
     }
 ]
 
@@ -282,17 +282,17 @@ const pagination = reactive({
 })
 
 const riskLevelMap = {
-    0: { text: '正常', type: 'success' },
-    1: { text: '低风险', type: 'warning' },
-    2: { text: '中风险', type: 'warning' },
-    3: { text: '高风险', type: 'danger' }
+    0: { text: '状态稳定', type: 'success' },
+    1: { text: '有些波动', type: 'warning' },
+    2: { text: '需要支持', type: 'warning' },
+    3: { text: '立即求助', type: 'danger' }
 }
 
 const analysisStatusMap = {
-    PENDING: 'AI分析尚未完成',
-    PROCESSING: 'AI分析进行中',
-    FAILED: 'AI分析失败',
-    COMPLETED: '暂无AI分析内容'
+    PENDING: 'AI状态分析尚未完成',
+    PROCESSING: 'AI状态分析进行中',
+    FAILED: 'AI状态分析失败',
+    COMPLETED: '暂无AI状态分析内容'
 }
 
 const emotionScore = computed(() => {
@@ -307,12 +307,12 @@ const riskLevel = computed(() => {
 
 const emotionNature = computed(() => {
     if (aiAnalysis.value?.isNegative === true) {
-        return { text: '负面情绪', type: 'danger' }
+        return { text: '负向状态', type: 'danger' }
     }
     if (aiAnalysis.value?.isNegative === false) {
-        return { text: '正面情绪', type: 'success' }
+        return { text: '正向状态', type: 'success' }
     }
-    return { text: '中性情绪', type: 'info' }
+    return { text: '中性状态', type: 'info' }
 })
 
 const analysisKeywords = computed(() => (
@@ -330,7 +330,7 @@ const analysisTime = computed(() => {
 })
 
 const analysisStatusText = computed(() => {
-    return analysisStatusMap[selectedDiary.value.aiAnalysisStatus] || '暂无AI分析结果'
+    return analysisStatusMap[selectedDiary.value.aiAnalysisStatus] || '暂无AI状态分析结果'
 })
 
 const displayValue = (value) => {
@@ -368,8 +368,8 @@ const handleDelete = async (row) => {
 
     try {
         await ElMessageBox.confirm(
-            `确认删除用户“${displayValue(row.nickname || row.username)}”在 ${displayValue(row.diaryDate)} 的情绪日志吗？删除后无法恢复。`,
-            '删除情绪日志',
+            `确认删除用户“${displayValue(row.nickname || row.username)}”在 ${displayValue(row.diaryDate)} 的状态打卡吗？删除后无法恢复。`,
+            '删除状态打卡',
             {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消',
@@ -427,7 +427,7 @@ const fetchTableData = async () => {
     } catch (error) {
         tableData.value = []
         pagination.total = 0
-        ElMessage.error('获取情绪日志失败')
+        ElMessage.error('获取状态打卡记录失败')
     } finally {
         loading.value = false
     }
